@@ -1,0 +1,60 @@
+:root {
+  --width: 250px;
+}
+
+html {
+  height: 100px;
+  width: var(--width);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: var(--width);
+  width: 600px;
+}
+
+ul {
+  margin: 0px;
+  padding: 0px;
+}
+
+.active {
+  background-color: #e8eaed;
+}
+
+.inactive {
+  background-color: #ffffff;
+}
+
+.box {
+  color: #202124;
+  padding: 8px 10px 10px 10px;
+  width: var(--width);
+}
+
+.name {
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.sub {
+  font-size: 12px;
+}
+
+.search-bar {
+  border: none;
+  border-bottom: 1px solid #202124;
+  font-size: 13px;
+  color: #202124;
+  padding: 8px 10px 10px 10px;
+  width: var(--width);
+}
+
+.search-bar:focus {
+  outline-width: 0;
+}
