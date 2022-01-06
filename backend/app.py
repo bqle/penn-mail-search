@@ -5,7 +5,7 @@ app = Flask(__name__)
 @app.route("/search")
 def search():
     key = request.args.get('key')
-    # run a search and return top 10 results
+    # run a search and return top 8 results
     
     return "Hello, World!"
 
