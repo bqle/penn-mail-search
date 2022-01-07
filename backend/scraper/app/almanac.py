@@ -36,7 +36,7 @@ def create_csv(dirname):
         writer.writerow(entry)
  
 def iterate_dir(orgs, affil):
-    for first_let in range(97, 123):
+    for first_let in range(107, 123):
         for second_let in range(97, 123):
             for org in orgs:
                 driver.get('https://directory.apps.upenn.edu/directory/jsp/fast2.do')
@@ -188,7 +188,7 @@ def main():
     orgs = ["college of arts & sciences", "wharton", "engineering"]
     affil = "Student"
     sign_in(get_driverpath())
-    create_csv(dirname)
+    # create_csv(dirname)
     iterate_dir(orgs, affil)
     upload_contacts()
 
