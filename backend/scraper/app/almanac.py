@@ -5,11 +5,12 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementClickInterceptedException
+
+dirname = r'%s' % os.path.dirname(os.path.realpath(__file__))
+csv_name = dirname + '/contacts.csv'
 
 def get_driverpath():
-    global dirname
     dirname = r'%s' % os.path.dirname(os.path.realpath(__file__))
     print("directory name", dirname)
     driverpath = dirname + r"/chromedriver_97"
@@ -36,7 +37,7 @@ def create_csv(dirname):
         writer.writerow(entry)
  
 def iterate_dir(orgs, affil):
-    for first_let in range(107, 123):
+    for first_let in range(97, 123):
         for second_let in range(97, 123):
             for org in orgs:
                 driver.get('https://directory.apps.upenn.edu/directory/jsp/fast2.do')
@@ -49,8 +50,13 @@ def iterate_dir(orgs, affil):
                 search_field.clear()
                 search_field.send_keys(chr(first_let) + chr(second_let))
                 affil_field.send_keys(affil)
-                search_button.click()
-                # time.sleep(1)
+                while (True):
+                    try :
+                        search_button.click()
+                        break
+                    except ElementClickInterceptedException:
+                        time.sleep(5)
+                        
                 try:
                     page_count = get_max_pages()
                     scrape_page()
