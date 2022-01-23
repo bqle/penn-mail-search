@@ -4,13 +4,22 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import $ from 'jquery';
 
+const CollegeNameVariations = ['college of arts & sciences']
+const EngineeringNameVariations = ['engineering & applied science undergrad', 
+                    'engineering & applied science masters',
+                    'engineering & applied science phd'
+                ]
+const WhartonNameVariations = ['wharton undergraduate', 'wharton graduate']
+const NursingNameVariations = ['nursing undergraduate']
+
+var schoolChoice = "Any";
 
 function OptionField(props) {
-  
   return (
     <div className={`box ${props.isActive ? "active" : "inactive"}`}>
       <div className={"name"}>{props.name}</div>
-      <div className={"sub"}>{props.email} {props.school} {props.major}</div>
+      <div className={"sub"}>{props.email}</div>
+      <div className={"sub"}>{props.school + " - " + props.major}</div>
     </div >
   )
 }
@@ -26,12 +35,13 @@ function SearchBar() {
     <div className="search-bar">
     <input type="text" id="searchText" className="search-bar--text" autoComplete="off" onKeyDown={handleKeyDown} autoFocus={true}></input>
     <div className="custom-select">
-      <select>
+      <select id="school-select">
         <option value="0">School</option>
         <option value="1">Any</option>
         <option value="2">College</option>
         <option value="3">Engineering</option>
-        <option value="4">Wharton</option>
+        <option value="4">Nursing</option>
+        <option value="5">Wharton</option>
         </select>
       </div>
     </div>
@@ -48,14 +58,36 @@ function ResultList(props) {
 
   useEffect(() => {
     function fetchSuggestions() {
-      fetch ('https://jsonkeeper.com/b/JOM3')
+      let school = 0;
+      switch(schoolChoice) {
+        case "Any": school = 0 ; break;
+        case "College": school = 1; break;
+        case "Engineering": school = 2; break;
+        case "Nursing": school = 3; break;
+        case "Wharton": school = 4; break;
+      }
+      let searchText = encodeURI(document.getElementById("searchText").value);
+      let url = 'http://localhost:5000/search?name='+searchText+'&school='+school;
+      console.log(url);
+
+      fetch (url)
       .then(res => res.json())
       .then(
         (result) => {
           console.log("fetched...");
+          console.log(result)
           setIsLoaded(true);
           for (let i = 0 ; i < result.length; i++) {
             result[i].id = i;
+            if (CollegeNameVariations.includes(result[i]["School"])) {
+              result[i]["School"] = "College";
+            } else if (EngineeringNameVariations.includes(result[i]["School"])) {
+              result[i]["School"] = "Engineering";
+            } else if (NursingNameVariations.includes(result[i]["School"])) {
+              result[i]["School"] = "Nursing";
+            } else if (WhartonNameVariations.includes(result[i]["School"])) {
+              result[i]["School"] = "Wharton";
+            }
           }
           setSuggestions(result);
           setCursor(0);
@@ -80,11 +112,14 @@ function ResultList(props) {
     }
     
     document.addEventListener("keydown", handleKeyDown);
+    // on typing a name or selecting a school, a search is made
     $('#searchText').on('input', fetchSuggestions);
+    $('.select-items').on('click', fetchSuggestions);
 
     return function cleanup() {
       document.removeEventListener("keydown", handleKeyDown);
       $('#searchText').off('input');
+      $('.select-items').off('click');
     };
   }, [cursor, suggestions]);
 
@@ -94,11 +129,11 @@ function ResultList(props) {
     return <div className={"box box-loading"}>Loading...</div> 
   } else {
     var items = suggestions.map((person) => {
-                return <OptionField key={person.id} email={person.email}
-                    school={person.school}
-                    major={person.major}
-                    name={person.name}
-                    isActive={person.id === cursor}
+                return <OptionField key={person['id']} email={person['Email']}
+                    school={person['School']}
+                    major={person['Major']}
+                    name={person['Name']}
+                    isActive={person['id']=== cursor}
                     >
                   </OptionField>;
                 })
@@ -112,12 +147,7 @@ function ResultList(props) {
 // ========================================
 
 
-const suggestions = [];
-for (let i = 0 ; i < 6; i++) {
-  suggestions.push({name: "Ben Le", email: "bqle@seas.upenn.edu" + i, school: "SEAS", major: "CS", id: i});
-}
-
-ReactDOM.render(<div><SearchBar /><ResultList /></div>, document.getElementById("root"));
+const app = ReactDOM.render(<div><SearchBar /><ResultList /></div>, document.getElementById("root"));
 
 function makeSearchTextFieldActive(e) {
   let searchTextfield = document.getElementById('searchText');
@@ -126,10 +156,6 @@ function makeSearchTextFieldActive(e) {
 }
 
 document.addEventListener("keydown", makeSearchTextFieldActive);
-
-
-
-
 
 
 
@@ -176,6 +202,7 @@ for (i = 0; i < l; i++) {
             break;
           }
         }
+        schoolChoice = this.innerHTML;
         h.click();
     });
     b.appendChild(c);
