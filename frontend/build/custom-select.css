@@ -7,8 +7,9 @@
     position: relative;
     font-family: Arial;
     font-size: 12px;
-    border: 1px var(--black) solid;
-    border-top: transparent;
+    /* border: 1px var(--black) solid; */
+    /* border-top: transparent; */
+    border-bottom: 1px var(--black) solid;
   
   }
   
@@ -35,7 +36,7 @@
   
   /* Point the arrow upwards when the select box is open (active): */
   .select-selected.select-arrow-active:after {
-    border-color: transparent transparent #fff transparent;
+    border-color: transparent transparent var(--black) transparent;
     top: 7px;
   }
   
@@ -44,7 +45,8 @@
     color: var(--black);
     padding: 10px 16px 8px 16px;
     border: 1px solid transparent;
-    border-color: var(--black) transparent transparent transparent;
+    /* border-color: var(--black) transparent transparent transparent; */
+    border-color: var(--black) var(--black) var(--black) var(--black);
     cursor: pointer;
   }
   

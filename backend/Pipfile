@@ -5,7 +5,8 @@ name = "pypi"
 
 [packages]
 flask = "2.0.2"
-selenium = "*"
+selenium = "4.1.0"
+pymongo = {extras = ["srv"], version = "*"}
 
 [dev-packages]
 

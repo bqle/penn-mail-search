@@ -39,6 +39,7 @@ function SearchBar() {
 }
 
 function ResultList(props) {
+ 
   // suggestions has structure [{name: , id: , email: , school: , major: }, ...]
   const [cursor, setCursor] = useState(0);
   const [suggestions, setSuggestions] = useState([]);
@@ -88,9 +89,9 @@ function ResultList(props) {
   }, [cursor, suggestions]);
 
   if (error) {
-    return <div className={"box"}>Error : {error.message}</div>
+    return <div className={"box box-loading"}>Error : {error.message}</div>
   } else if (!isLoaded) {
-    return <div className={"box"}>Loading...</div> 
+    return <div className={"box box-loading"}>Loading...</div> 
   } else {
     var items = suggestions.map((person) => {
                 return <OptionField key={person.id} email={person.email}
@@ -154,6 +155,7 @@ for (i = 0; i < l; i++) {
     create a new DIV that will act as an option item: */
     c = document.createElement("DIV");
     c.innerHTML = selElmnt.options[j].innerHTML;
+    c.setAttribute("class", "select-item")
     c.addEventListener("click", function(e) {
         /* When an item is clicked, update the original select box,
         and the selected item: */

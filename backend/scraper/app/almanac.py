@@ -33,7 +33,7 @@ def create_csv(dirname):
     print('Writing contacts to: ' + csv_name)
     with open(csv_name, mode='w') as contacts:
         writer = csv.writer(contacts, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        entry = ["Name", "Given Name", "Additional Name", "Family Name", "E-mail 1 - Value", "Major", "School"]
+        entry = ["Name", "Given Name", "Additional Name", "Family Name", "Email", "Major", "School"]
         writer.writerow(entry)
  
 def iterate_dir(orgs, affil):
