@@ -1,10 +1,12 @@
 :root {
-  --width: 250px;
+  --search-text-width: 200px;
+  --height: 300px;
+  --html-width: 300px;
+  --width: 200px;
 }
 
 html {
-  height: 100px;
-  width: var(--width);
+  width: var(--html-width);
 }
 
 body {
@@ -14,8 +16,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: var(--width);
-  width: 600px;
+  height: var(--height);
+  min-width: var(--html-width);
 }
 
 ul {
@@ -34,7 +36,7 @@ ul {
 .box {
   color: #202124;
   padding: 8px 10px 10px 10px;
-  width: var(--width);
+  width: var(--search-text-width);
 }
 
 .name {
@@ -47,14 +49,20 @@ ul {
 }
 
 .search-bar {
-  border: none;
-  border-bottom: 1px solid #202124;
+  display:flex;
+  flex-direction: row;
+  
+}
+
+.search-bar--text {
+  border: 1px solid #202124;
+  border-right: none;
   font-size: 13px;
   color: #202124;
   padding: 8px 10px 10px 10px;
-  width: var(--width);
+  width: var(--search-text-width);
 }
 
-.search-bar:focus {
+.search-bar--text:focus {
   outline-width: 0;
 }

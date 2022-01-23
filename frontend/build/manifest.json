@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "My Extension",
-  "description": "This extension is a starting point to create a real Chrome extension",
+  "name": "Penn Mail Search",
+  "description": "This extension helps students at the School of Arts & Sciences at UPenn to find the email of fellow colleagues",
   "version": "0.0.1",
 
   "action": {
