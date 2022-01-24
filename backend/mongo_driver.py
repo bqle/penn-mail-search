@@ -2,20 +2,34 @@ import pymongo
 from enumerations import School
 from pprint import pprint
 from bson.json_util import dumps, loads
+import json
+import os
 
-client = pymongo.MongoClient("mongodb+srv://penn-mail-search:penn-mail-search@us-east.36o9t.mongodb.net/penn-mail-search?retryWrites=true&w=majority")
-db = client['penn-mail-search']
-collection = db['student']
+if not os.path.exists('.config'):
+    print("config file does not exist")
+    quit()
 
+with open('.config', 'r') as f:
+    config = json.loads(f.read())
+
+mondodb_username = config['mongodb-username']
+mongodb_password = config['mongodb-password']
+mongodb_url = config['mongodb-url']
 
 class MongoDriver:
     def __init__(self):
-        self.client = pymongo.MongoClient("mongodb+srv://penn-mail-search:penn-mail-search@us-east.36o9t.mongodb.net/penn-mail-search?retryWrites=true&w=majority")
-        self.db = client['penn-mail-search']
-        self.collectoin = db['student']
+        try: 
+            self.client = pymongo.MongoClient(
+                "mongodb+srv://{}:{}@{}/penn-mail-search?retryWrites=true&w=majority".format(mondodb_username, mongodb_password, mongodb_url))
+        except:
+            print("Login Error: incorrect username, password, or url for database\n")
+            raise
+
+        self.db = self.client['penn-mail-search']
+        self.collection = self.db['student']
 
     def search(self, name = '', school : School = School.ANY):
-        suggestions_cursor = collection.find(
+        suggestions_cursor = self.collection.find(
             filter={'Name': {'$regex': name, '$options': 'i'},
                     'School': {'$in': school.value}
                     }, 
@@ -24,4 +38,3 @@ class MongoDriver:
         json_data = dumps(list(suggestions_cursor))
         return json_data
 
-driver = MongoDriver()

@@ -18,6 +18,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: var(--height);
+  max-height: var(--height);
+  overflow: scroll;
   min-width: var(--html-width);
 }
 
@@ -40,7 +42,7 @@ ul {
 }
 
 .box-loading {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .name {

@@ -191,7 +191,7 @@ def upload_contacts():
 def main():
     # orgs = get_orgs_input()
     # affil = get_affil_input()
-    orgs = ["college of arts & sciences", "wharton", "engineering"]
+    orgs = ["college of arts & sciences", "engineering", "nursing", "wharton"]
     affil = "Student"
     sign_in(get_driverpath())
     # create_csv(dirname)

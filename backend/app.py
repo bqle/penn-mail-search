@@ -15,12 +15,8 @@ def search():
 
     school = request.args.get('school')
     school = school_options[int(school)] if school is not None else School.ANY
-    print(name, school)
     result = mongo_driver.search(name=name, school=school)
     return result
     
-name = "Chinh"
-school = School.ANY
-
-
-app.run(debug=True)
+if __name__ == '__main__':
+    app.run()
