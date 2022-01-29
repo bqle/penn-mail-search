@@ -37,8 +37,43 @@ def create_csv(dirname):
         writer.writerow(entry)
  
 def iterate_dir(orgs, affil):
-    for first_let in range(97, 123):
-        for second_let in range(97, 123):
+    # for first_let in range(105, 106):
+    #     for second_let in range(113, 123):
+    #         for org in orgs:
+    #             driver.get('https://directory.apps.upenn.edu/directory/jsp/fast2.do')
+    #             org_field = driver.find_element(By.XPATH, '/html/body/table[2]/tbody/tr/td/table[2]/tbody/tr[3]/td/table/tbody/tr/td[1]/form/table/tbody/tr[7]/td[2]/input')
+    #             affil_field = driver.find_element(By.XPATH, '/html/body/table[2]/tbody/tr/td/table[2]/tbody/tr[3]/td/table/tbody/tr/td[1]/form/table/tbody/tr[6]/td[2]/select')
+    #             search_field = driver.find_element(By.XPATH, '/html/body/table[2]/tbody/tr/td/table[2]/tbody/tr[3]/td/table/tbody/tr/td[1]/form/table/tbody/tr[3]/td[2]/input')
+    #             search_button = driver.find_element(By.XPATH, '/html/body/table[2]/tbody/tr/td/table[2]/tbody/tr[3]/td/table/tbody/tr/td[1]/form/table/tbody/tr[9]/td/a[1]/span')
+    #             org_field.clear()
+    #             org_field.send_keys(org)
+    #             search_field.clear()
+    #             search_field.send_keys(chr(first_let) + chr(second_let))
+    #             affil_field.send_keys(affil)
+    #             while (True):
+    #                 try :
+    #                     search_button.click()
+    #                     break
+    #                 except ElementClickInterceptedException:
+    #                     time.sleep(5)
+                        
+    #             try:
+    #                 page_count = get_max_pages()
+    #                 print(chr(first_let) + chr(second_let), org, page_count)
+    #                 time.sleep(1)
+    #                 scrape_page()
+    #                 if page_count > 1:
+    #                     for i in range(1, page_count):
+    #                         next_button = driver.find_element(By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr/td/div[2]/a[last()]/span')
+    #                         next_button.click()
+    #                         time.sleep(1)
+    #                         scrape_page()
+    #             except Exception:
+    #                 print("Some exception")
+    #                 raise
+
+    for first_let in range(122, 123):
+        for second_let in range(121, 123):
             for org in orgs:
                 driver.get('https://directory.apps.upenn.edu/directory/jsp/fast2.do')
                 org_field = driver.find_element(By.XPATH, '/html/body/table[2]/tbody/tr/td/table[2]/tbody/tr[3]/td/table/tbody/tr/td[1]/form/table/tbody/tr[7]/td[2]/input')
@@ -59,30 +94,41 @@ def iterate_dir(orgs, affil):
                         
                 try:
                     page_count = get_max_pages()
+                    print(chr(first_let) + chr(second_let), org, page_count)
+                    time.sleep(1)
                     scrape_page()
                     if page_count > 1:
                         for i in range(1, page_count):
-                            next_button = driver.find_element(By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr/td/div[2]/a[{}]/span'.format(get_max_pages()))
-                            next_button.click()
-                            # time.sleep(1)
+                            next_button = driver.find_element(By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr/td/div[2]/a[last()]/span')
+                            while (True):
+                                try :
+                                    next_button.click()
+                                    break
+                                except ElementClickInterceptedException:
+                                    time.sleep(5)
                             scrape_page()
                 except Exception:
-                    continue
+                    print("Some exception")
+                    raise
 
 def scrape_page():
+    print("scraping...")
     name_path = '/html/body/table[2]/tbody/tr/td/form/table[1]/tbody/tr/td/table/tbody/tr[{}]/td[1]/table/tbody/tr/td/a/span'
     email_path = '/html/body/table[2]/tbody/tr/td/form/table[1]/tbody/tr/td/table/tbody/tr[{}]/td[3]/table/tbody/tr[2]/td/a'
     major_path = '/html/body/table[2]/tbody/tr/td/form/table[1]/tbody/tr/td/table/tbody/tr[{}]/td[2]/table/tbody/tr[1]/td'
     school_path = '/html/body/table[2]/tbody/tr/td/form/table[1]/tbody/tr/td/table/tbody/tr[{}]/td[2]/table/tbody/tr[2]/td'
 
+    name = None
+    email = None
+    major = None
+    school = None
     for row in range(2, 22):
         try:
             name = driver.find_element(By.XPATH, name_path.format(row))
             email = driver.find_element(By.XPATH, email_path.format(row))
             major = driver.find_element(By.XPATH, major_path.format(row))
             school = driver.find_element(By.XPATH, school_path.format(row))
-        except NoSuchElementException:
-            print("Parse failed...", name.text, email.text, major.text, school.text)
+        except Exception:
             # needs to continuing trying, because some students don't have phone numbers, so their email is at tr[1]
             email_path = '/html/body/table[2]/tbody/tr/td/form/table[1]/tbody/tr/td/table/tbody/tr[{}]/td[3]/table/tbody/tr[1]/td/a'
             try :
@@ -90,25 +136,28 @@ def scrape_page():
                 email = driver.find_element(By.XPATH, email_path.format(row))
                 major = driver.find_element(By.XPATH, major_path.format(row))
                 school = driver.find_element(By.XPATH, school_path.format(row))
-            except NoSuchElementException:
-                print("Parse failed twice... ", name.text, email.text, major.text, school.text)
-        else:
-            name = name.text
-            email = email.text
-            major = major.text
-            school = school.text
-            make_entry(name, email, major, school)
+                email_path = '/html/body/table[2]/tbody/tr/td/form/table[1]/tbody/tr/td/table/tbody/tr[{}]/td[3]/table/tbody/tr[2]/td/a'
+            except Exception:
+                email_path = '/html/body/table[2]/tbody/tr/td/form/table[1]/tbody/tr/td/table/tbody/tr[{}]/td[3]/table/tbody/tr[2]/td/a'
+                continue
+    
+        name = name.text
+        email = email.text
+        major = major.text
+        school = school.text
+        make_entry(name, email, major, school)
+
 
 def get_max_pages():
     next_path = '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr/td/div[2]/a[{}]/span'
     max = 1
-    for i in range(2, 20):
+    for i in range(2, 30):
         try:
-            next_button = driver.find_element(By.XPATH, next_path.format(i))
+            div = driver.find_element(By.XPATH, next_path.format(i))
+            if (div.text.isnumeric()) :
+                max = int(div.text)
         except NoSuchElementException:
             break
-        else:
-            max = i
     return max
         
 def make_entry(name, email, major, school):
