@@ -30,11 +30,11 @@ class MongoDriver:
 
     def search(self, name = '', school : School = School.ANY):
         suggestions_cursor = self.collection.find(
-            filter={'Name': {'$regex': name, '$options': 'i'},
+            filter={'$or': [{'Name': {'$regex': name, '$options': 'i'}},
+                    {'Email': {'$regex': name, '$options': 'i'}}],
                     'School': {'$in': school.value}
                     }, 
             limit=8)
-        
         json_data = dumps(list(suggestions_cursor))
         return json_data
 

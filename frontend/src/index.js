@@ -16,7 +16,10 @@ var schoolChoice = "Any";
 
 function OptionField(props) {
   return (
-    <div className={`box ${props.isActive ? "active" : "inactive"}`}>
+    <div className={`box ${props.isActive ? "active" : "inactive"}`} 
+    onClick={() => {props.changeCursorIndex();props.copyToClipBoard();}}
+    onMouseEnter={() => props.changeCursorIndex()}
+    >
       <div className={"name"}>{props.name}</div>
       <div className={"sub"}>{props.email}</div>
       <div className={"sub"}>{props.school + " - " + props.major}</div>
@@ -106,8 +109,10 @@ function ResultList(props) {
       } else if (e.code === "ArrowDown" && cursor < suggestions.length - 1) {
         setCursor(cursor + 1);
       } else if (e.code === "Enter") {
-        console.log('clipped');
-        navigator.clipboard.writeText(suggestions[cursor].email);
+        console.log(suggestions[cursor]);
+        if (suggestions[cursor] !== undefined) {
+          navigator.clipboard.writeText(suggestions[cursor]['Email']);
+        }
       }
     }
     
@@ -123,6 +128,14 @@ function ResultList(props) {
     };
   }, [cursor, suggestions]);
 
+  function changeCursorIndex(index) {
+    setCursor(index);
+  }
+
+  function copyToClipBoard() {
+    navigator.clipboard.writeText(suggestions[cursor]['Email']);
+  }
+
   if (error) {
     return <div className={"box box-loading"}>Error : {error.message}</div>
   } else if (!isLoaded) {
@@ -134,6 +147,8 @@ function ResultList(props) {
                     major={person['Major']}
                     name={person['Name']}
                     isActive={person['id']=== cursor}
+                    changeCursorIndex={() => changeCursorIndex(person['id'])}
+                    copyToClipBoard={() => copyToClipBoard()}
                     >
                   </OptionField>;
                 })
