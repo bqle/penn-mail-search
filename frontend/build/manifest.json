@@ -22,5 +22,5 @@
   },
   "permissions": [
   ],
-  "host_permissions": ["http://localhost:5000/"]
+  "host_permissions": ["http://localhost:5000/", "http://100.26.35.151:5000/"]
 }

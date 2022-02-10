@@ -30,8 +30,10 @@ class MongoDriver:
 
     def search(self, name = '', school : School = School.ANY):
         suggestions_cursor = self.collection.find(
-            filter={'$or': [{'Name': {'$regex': name, '$options': 'i'}},
-                    {'Email': {'$regex': name, '$options': 'i'}}],
+            filter={'$or': [{'Name': {'$regex': '^' + name, '$options': 'i'}},
+                            {'Family Name': {'$regex': '^' + name, '$options': 'i'}},
+                            {'Additional Name': {'$regex': '^' + name, '$options': 'i'}},
+                            {'Email': {'$regex': '^' + name, '$options': 'i'}}],
                     'School': {'$in': school.value}
                     }, 
             limit=8)

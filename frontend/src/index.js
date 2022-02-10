@@ -70,7 +70,7 @@ function ResultList(props) {
         case "Wharton": school = 4; break;
       }
       let searchText = encodeURI(document.getElementById("searchText").value);
-      let url = 'http://localhost:5000/search?name='+searchText+'&school='+school;
+      let url = 'http://100.26.35.151:5000/search?name='+searchText+'&school='+school;
       console.log(url);
 
       fetch (url)
