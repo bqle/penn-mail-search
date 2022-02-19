@@ -1,26 +1,26 @@
 {
   "manifest_version": 3,
   "name": "Penn Mail Search",
-  "description": "This extension helps students at the School of Arts & Sciences at UPenn to find the email of fellow colleagues",
-  "version": "0.0.1",
+  "description": "Find your colleagues, anywhere, anytime, with no limitations across schools",
+  "version": "0.0.2",
 
   "action": {
     "default_popup": "index.html",
     "default_title": "Open the popup",
     "default_icon": {
-      "16": "logo192.png",
-      "32": "logo192.png",
-      "48": "logo192.png",
-      "128": "logo192.png"
+      "16": "penn-logo.png",
+      "32": "penn-logo.png",
+      "48": "penn-logo.png",
+      "128": "penn-logo.png"
     }
   },
   "icons": {
-    "16": "logo192.png",
-    "32": "logo192.png",
-    "48": "logo192.png",
-    "128": "logo192.png"
+    "16": "penn-logo.png",
+    "32": "penn-logo.png",
+    "48": "penn-logo.png",
+    "128": "penn-logo.png"
   },
   "permissions": [
   ],
   "host_permissions": ["http://localhost:5000/", "http://100.26.35.151:5000/"]
-}
+} 

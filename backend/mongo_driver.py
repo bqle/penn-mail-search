@@ -36,7 +36,7 @@ class MongoDriver:
                             {'Email': {'$regex': '^' + name, '$options': 'i'}}],
                     'School': {'$in': school.value}
                     }, 
-            limit=8)
+            limit=30)
         json_data = dumps(list(suggestions_cursor))
         return json_data
 

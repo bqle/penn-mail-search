@@ -1,5 +1,5 @@
 'use strict';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import $ from 'jquery';
@@ -15,10 +15,35 @@ const NursingNameVariations = ['nursing undergraduate']
 var schoolChoice = "Any";
 
 function OptionField(props) {
+  const [flash, setFlash] = useState(false);
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.code === "Enter") {
+        if (props.isActive) {
+          changeColor();
+        }
+      }
+    }
+    
+    document.addEventListener("keydown", handleKeyDown);
+
+    return function cleanup() {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  });
+
+  function changeColor() {
+    setFlash(true);
+    setTimeout(() => {setFlash(false)}, 200);
+  }
+
   return (
-    <div className={`box ${props.isActive ? "active" : "inactive"}`} 
-    onClick={() => {props.changeCursorIndex();props.copyToClipBoard();}}
-    onMouseEnter={() => props.changeCursorIndex()}
+    <div className={`box ${props.isActive ? "active" : "inactive"} ${flash ? "box-flash" : ""}`} 
+    onClick={() => {props.changeCursorIndex();props.copyToClipBoard();changeColor();}}
+    style={{transition: "all .2s ease",
+            WebkitTransition: "all .2s ease",
+            MozTransition: "all .2s ease",}}
     >
       <div className={"name"}>{props.name}</div>
       <div className={"sub"}>{props.email}</div>
@@ -58,6 +83,9 @@ function ResultList(props) {
   const [suggestions, setSuggestions] = useState([]);
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const activeComponentRef = useRef(null)
+
+  const scrollToActiveElement = () => activeComponentRef.current.scrollIntoView({behavior: 'smooth', block: 'center'})
 
   useEffect(() => {
     function fetchSuggestions() {
@@ -106,8 +134,10 @@ function ResultList(props) {
     function handleKeyDown(e) {
       if (e.code === "ArrowUp" && cursor > 0) {
         setCursor(cursor - 1);
+        scrollToActiveElement();
       } else if (e.code === "ArrowDown" && cursor < suggestions.length - 1) {
         setCursor(cursor + 1);
+        scrollToActiveElement();
       } else if (e.code === "Enter") {
         console.log(suggestions[cursor]);
         if (suggestions[cursor] !== undefined) {
@@ -141,8 +171,13 @@ function ResultList(props) {
   } else if (!isLoaded) {
     return <div className={"box box-loading"}>Loading...</div> 
   } else {
+    console.log('cursor', cursor)
     var items = suggestions.map((person) => {
-                return <OptionField key={person['id']} email={person['Email']}
+                return <div 
+                  key={person['id']} 
+                  ref= {person['id'] === cursor? activeComponentRef : null} >
+                  <OptionField 
+                          email={person['Email']}
                     school={person['School']}
                     major={person['Major']}
                     name={person['Name']}
@@ -150,11 +185,12 @@ function ResultList(props) {
                     changeCursorIndex={() => changeCursorIndex(person['id'])}
                     copyToClipBoard={() => copyToClipBoard()}
                     >
-                  </OptionField>;
+                  </OptionField>
+                </div>;
                 })
 
     return (
-      <ul>{items}</ul>
+      <ul className={"result-list"}>{items}</ul>
     )
   }
 }

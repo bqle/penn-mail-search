@@ -29,16 +29,28 @@ ul {
 }
 
 .active {
-  background-color: #e8eaed;
+  background-color: #d3d3d3;
 }
 
 .inactive {
   background-color: #ffffff;
 }
 
+.inactive:hover {
+  background-color: #f5f5f5;
+}
+
 .box {
   color: #202124;
   padding: 7px 10px 7px 10px;
+  transition: all .5s ease;
+  -moz-transition: all 0.5s ease-in;
+  -o-transition: all 0.5s ease-in;
+  -webkit-transition: all 0.5s ease-in;
+}
+
+.box-flash {
+  background-color: #c5d4e8;
 }
 
 .box-loading {
@@ -72,4 +84,9 @@ ul {
 
 .search-bar--text:focus {
   outline-width: 0;
+}
+
+.result-list {
+  max-height:400px;
+  overflow: scroll;
 }
